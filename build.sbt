@@ -1,19 +1,21 @@
-name := "Lift 2.5 starter template"
+name := "jpnsrv"
 
 version := "0.0.1"
 
-organization := "net.liftweb"
+organization := "com.jasonnerothin"
 
 scalaVersion := "2.9.1"
 
 resolvers ++= Seq("snapshots"     at "http://oss.sonatype.org/content/repositories/snapshots",
                 "releases"        at "http://oss.sonatype.org/content/repositories/releases",
-"central" at "http://repo1.maven.org/maven2"
+                "central" at "http://repo1.maven.org/maven2"
                 )
 
 seq(com.github.siasia.WebPlugin.webSettings :_*)
 
 scalacOptions ++= Seq("-deprecation", "-unchecked")
+
+retrieveManaged := true
 
 libraryDependencies ++= {
   val liftVersion = "2.5-M2"
@@ -25,7 +27,9 @@ libraryDependencies ++= {
     "org.eclipse.jetty.orbit" % "javax.servlet" % "3.0.0.v201112011016" % "container,test" artifacts Artifact("javax.servlet", "jar", "jar"),
     "ch.qos.logback"    % "logback-classic"     % "1.0.6",
     "org.specs2"        %% "specs2"             % "1.12.1"           % "test",
-    "com.h2database"    % "h2"                  % "1.3.167"
+    "com.h2database"    % "h2"                  % "1.3.167",
+    "org.mockito"       % "mockito-all"         % "1.9.0"            % "test",
+    "org.scalatest"     % "scalatest"           % "1.3"
   )
 }
 
