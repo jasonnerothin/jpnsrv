@@ -5,15 +5,15 @@ import code.model.Gig
 /**
  * Created by IntelliJ IDEA.
  * User: jason
- * Date: 10/28/12
- * Time: 10:01 PM
- * Provides...
+ * Date: 10/26/12
+ * Time: 9:16 PM
+ * Provides access to gigs that are stored in mongo
  */
-class GigRepository extends GigFinding{
+trait GigFinding {
 
   /**
    * @return all of the gigs i've worked
    */
-  def findAll() : List[Gig] = null
+  def findAll(): List[Gig]
 
 }

@@ -1,5 +1,7 @@
 package code.model
 
+import org.codehaus.jackson.annotate.JsonProperty
+
 /**
  * Created by IntelliJ IDEA.
  * User: jason
@@ -8,9 +10,9 @@ package code.model
  * Provides a superficial description of some of my various skillz.
  */
 class Skill(
-             val skillId: String
-             , val skillName: String
-             , val categories: Array[String]
-             , val experience: Int
-             , val gigs: Array[Gig]
+             @JsonProperty val skillId: String
+             , @JsonProperty val skillName: String
+             , @JsonProperty val categories: Array[String]
+             , @JsonProperty val monthsOfExperience: Int
+             , @JsonProperty val gigs: List[Gig]
            )

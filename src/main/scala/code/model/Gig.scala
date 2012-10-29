@@ -1,6 +1,7 @@
 package code.model
 
 import org.joda.time.DateTime
+import org.codehaus.jackson.annotate.JsonProperty
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,15 +11,15 @@ import org.joda.time.DateTime
  * Provides a description of one of the many gigs I've worked over the years.
  */
 class Gig(
-           val gigId: String
-           , val gigName: String
-           , val title: String
-           , val employer: String
-           , val blurb: String
-           , val address: String
-           , val methodology: String
-           , val result: String
-           , val startDate: DateTime
-           , val endDate: DateTime
-           , val skills: Array[Skill]
+           @JsonProperty val gigId: String
+           , @JsonProperty val gigName: String
+           , @JsonProperty val title: String
+           , @JsonProperty val employer: String
+           , @JsonProperty val blurb: String
+           , @JsonProperty val address: String
+           , @JsonProperty val methodology: String
+           , @JsonProperty val result: String
+           , @JsonProperty val startDate: DateTime
+           , @JsonProperty val endDate: DateTime
+           , @JsonProperty val skills: List[Skill]
          )

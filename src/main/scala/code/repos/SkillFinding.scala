@@ -5,13 +5,15 @@ import code.model.Skill
 /**
  * Created by IntelliJ IDEA.
  * User: jason
- * Date: 10/28/12
- * Time: 10:41 PM
+ * Date: 10/26/12
+ * Time: 9:13 PM
+ * Provides access to mongo, for retrieving skills
  */
-class SkillRepository extends SkillFinding{
+trait SkillFinding {
+
   /**
    * @return all of my skills
    */
-  def findAll() : List[Skill] = null
+  def findAll(): List[Skill]
 
 }
