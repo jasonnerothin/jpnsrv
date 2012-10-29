@@ -14,6 +14,6 @@ trait GigRepository {
   /**
    * @return all of the gigs i've worked
    */
-  def findAll: List[Gig]
+  def findAll(): List[Gig]
 
 }
