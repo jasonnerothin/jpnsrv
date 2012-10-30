@@ -7,6 +7,7 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.mock.MockitoSugar
 import org.specs2.specification.BeforeEach
 import code.mongo.{SkillReader, GigReader, MongoReader}
+import code.model.Gig
 
 /**
  * Created by IntelliJ IDEA.
@@ -23,6 +24,14 @@ sealed class GigRepositoryTest extends FunSuite with BeforeAndAfterEach with Moc
 
   override def beforeEach(){
     testInstance = new GigRepository(gigReader, skillReader)
+  }
+
+  test("duration is calculated from startDate and endDate"){
+
+  }
+
+  test("duration is calculated from startDate and null endDate"){
+
   }
 
 

@@ -1,6 +1,7 @@
 package code.model
 
 import org.codehaus.jackson.annotate.JsonProperty
+import com.mongodb.casbah.commons.MongoDBObject
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,4 +14,12 @@ class Skill( @JsonProperty val skillId: String
              , @JsonProperty val skillName: String
              , @JsonProperty val categories: Array[String]
              , @JsonProperty val monthsOfExperience: Int
-             , @JsonProperty val gigs: List[Gig] ) extends Entity{}
+             , @JsonProperty val gigs: List[Gig] ) extends Entity
+
+trait EntityKey{
+  def oid: String
+
+
+}
+
+class SkillKeys(val oid: String, val gigOids: List[String]) extends EntityKey

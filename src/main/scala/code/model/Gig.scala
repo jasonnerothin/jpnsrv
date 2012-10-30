@@ -16,10 +16,13 @@ class Gig (
            , @JsonProperty val title: String
            , @JsonProperty val employer: String
            , @JsonProperty val blurb: String
-           , @JsonProperty val address: String
+           , @JsonProperty val cityState: String
            , @JsonProperty val methodology: String
            , @JsonProperty val result: String
            , @JsonProperty val startDate: DateTime
            , @JsonProperty val endDate: DateTime
+           , @JsonProperty val durationInMillis: Long
            , @JsonProperty val skills: List[Skill]
          ) extends Entity
+
+class GigKeys(val oid: String, val skillOids: List[String]) extends EntityKey
