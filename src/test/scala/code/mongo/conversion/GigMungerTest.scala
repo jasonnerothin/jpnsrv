@@ -141,4 +141,15 @@ class GigMungerTest extends FunSuite with MockitoSugar {
 
   }
 
+  test("gigId is a requirement of Gig results"){
+    dbObject.update("gigId", null)
+
+    var caught = intercept[IllegalStateException]{
+      testInstance.populate(dbObject)
+    }
+
+    val msg = caught.getMessage
+    assert( msg.contains("Illegal db result with null gigId"))
+  }
+
 }

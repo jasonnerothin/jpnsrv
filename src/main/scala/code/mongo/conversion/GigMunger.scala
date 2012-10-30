@@ -3,8 +3,6 @@ package code.mongo.conversion
 import code.model.{Skill, GigKeys, Gig}
 import com.mongodb.casbah.commons.MongoDBObject
 import org.joda.time.{Duration, DateTime}
-import com.mongodb.BasicDBList
-import collection.{mutable, LinearSeq}
 import com.mongodb.casbah.commons.conversions.scala.RegisterJodaTimeConversionHelpers
 
 /**
@@ -18,7 +16,12 @@ class GigMunger extends DBObjectMunger[Gig] {
   RegisterJodaTimeConversionHelpers() // no point in ever turning them off, really
 
   /**
-   * Populates:
+   * Takes properties of d and sticks them into a
+   * new instance of e, which is returned. Note: returned `Gig`
+   * may not be fully-initialized, but will contain all properties
+   * of `Gig` that need only to simply copied or calculated
+   *
+   * requires that d have a non-null gigId set
    * @param d data source
    * @return a new instance of e
    */
@@ -44,7 +47,7 @@ class GigMunger extends DBObjectMunger[Gig] {
     }
 
     // TODO will jackson tolerate nulls? or does it want Option[Stings]?
-    new Gig(
+    val gig = new Gig(
       string("gigId") getOrElse null,
       string("gigName") getOrElse null,
       string("title") getOrElse null,
@@ -59,8 +62,18 @@ class GigMunger extends DBObjectMunger[Gig] {
       List.empty[Skill]
     )
 
+    if(gig.gigId == null) throw new IllegalStateException("Illegal db result with null gigId: " + d.toString() )
+
+    gig
+
   }
 
+  /**
+   * Grabs the `Gigs`'s "_id" out of the mongo dbobject
+   * and any oids for related `Skill`s as well
+   * @param d database object
+   * @return all of the oids, in one little package
+   */
   def extractOids(d: MongoDBObject) : GigKeys = {
     val oid = stringOrNull("_id", d)
     require(oid != null, "_id value may not be null")

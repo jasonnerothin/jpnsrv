@@ -1,9 +1,8 @@
 package code.mongo.conversion
 
 import code.model.{EntityKey, Entity}
-import com.mongodb.{BasicDBList, DBObject}
 import com.mongodb.casbah.commons.{MongoDBList, MongoDBObject}
-import collection.{mutable, LinearSeq}
+import collection.mutable
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,18 +29,40 @@ trait DBObjectMunger[E <: Entity] {
   /**
    * Grabs the `Entity`'s "_id" out of the mongo dbobject
    * and any oids for related `Entity`s as well
-   * @param d datbase object
+   * @param d database object
    * @return all of the oids, in one little package
    */
   def extractOids(d: MongoDBObject) : EntityKey
 
+  // TODO consider getting rid of in favor of Options
+  /**
+   * Convenience method to turn scala-able Options into java-like
+   * nulls in case Jackson requires something like that
+   * @param propName property name we seek
+   * @param d db result
+   * @return a string or null
+   */
   protected[conversion] def stringOrNull(propName: String, d: MongoDBObject): String ={
     val str: Option[String] = d.getAs[String](propName)
     if ( str.isEmpty ) null else str.get
   }
 
+  /**
+   * Converts a known property into a List of strings
+   * @param propName property
+   * @param d database result
+   * @return a (possibly empty) list
+   */
   protected[conversion] def asList(propName: String, d: MongoDBObject): List[String] ={
-    val list = (d.as[MongoDBList](propName))
+    def asMongoList():MongoDBList = {
+      try{
+        d.as[MongoDBList](propName)
+      } catch{
+        case _: Throwable =>
+          MongoDBList()
+      }
+    }
+    val list = asMongoList()
     var stringList: mutable.MutableList[String] = new mutable.MutableList[String]
     for { item <- list.toArray } stringList += item.toString
     stringList.toList

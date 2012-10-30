@@ -12,7 +12,7 @@ import com.mongodb.casbah.commons.MongoDBObject
  */
 class Skill( @JsonProperty val skillId: String
              , @JsonProperty val skillName: String
-             , @JsonProperty val categories: Array[String]
+             , @JsonProperty val categories: List[String]
              , @JsonProperty val monthsOfExperience: Int
              , @JsonProperty val gigs: List[Gig] ) extends Entity
 

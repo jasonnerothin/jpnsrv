@@ -4,9 +4,7 @@ import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
 import org.scalatest.FunSuite
 import org.scalatest.mock.MockitoSugar
-import org.specs2.specification.BeforeEach
 import code.model.Gig
-import com.mongodb.DBObject
 import com.mongodb.casbah.commons.{MongoDBList, MongoDBObject}
 
 /**
@@ -21,7 +19,7 @@ class DbObjectMungerTest extends FunSuite with MockitoSugar{
   val testInstance: TestDbObjectMunger = new TestDbObjectMunger
   var dbo: MongoDBObject = _
 
-  def before{
+  def before(){
 
     val builder = MongoDBObject.newBuilder
     builder += "xyz"->"pdq"
@@ -39,7 +37,7 @@ class DbObjectMungerTest extends FunSuite with MockitoSugar{
 
   // TODO unless Jackson forbids it or uses Nil or something instead
   test("stringOrNull returns null when None"){
-    before
+    before()
     val actual = testInstance.stringOrNull("foo", dbo)
     assert( actual == null, "want null if property isn't there.")
   }
@@ -50,19 +48,28 @@ class DbObjectMungerTest extends FunSuite with MockitoSugar{
   }
 
   test("stringOrNull returns the right thing"){
-    before
+    before()
     val actual = testInstance.stringOrNull("xyz", dbo)
     assert("pdq" === actual, "the joke just wouldn't work, otherwise...")
   }
 
   test("asList works right"){
-    before
+    before()
     val actual = testInstance.asList("sammichstuff", dbo)
     assert(List("baloney", "provalone", "mustard") == actual, "a list apart, apparently")
   }
 
+  test("asList returns empty list when no property is there"){
+    before()
+    val actual:List[String] = testInstance.asList("foo", dbo)
+
+    assert(actual != null, "not null")
+    assert(actual.isEmpty, "non-existent list should be empty")
+
+  }
+
   test("mongoDbObject doesn't do funny type inference"){
-    before
+    before()
     val actual = testInstance.stringOrNull("123", dbo)
     assert(actual.getClass == classOf[String], "type inference is incorrect")
   }
