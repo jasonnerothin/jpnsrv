@@ -6,7 +6,7 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.mock.MockitoSugar
 import org.specs2.specification.BeforeEach
-import code.mongo.MongoReading
+import code.mongo.MongoReader
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,17 +15,12 @@ import code.mongo.MongoReading
  * Time: 9:19 PM
  */
 @RunWith(classOf[JUnitRunner])
-sealed class GigRepositoryTest extends FunSuite with BeforeEach with MockitoSugar{
+sealed class GigRepositoryTest extends FunSuite with MockitoSugar{
 
     var testMe : GigRepository = _
-    var mongoReader : MongoReading[String] = _
-
-    override def before{ // newing stuff up
-
-    }
+    var mongoReader : MongoReader = _
 
     test("yo mammy"){
-      import code.repos.GigFinding
       assert(23+25 == 48)
     }
 

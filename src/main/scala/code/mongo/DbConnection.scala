@@ -1,13 +1,13 @@
 package code.mongo
 
-import com.mongodb.casbah.Imports._
+import com.mongodb.casbah.{MongoConnection, MongoDB}
 
 /**
  * Created by IntelliJ IDEA.
  * User: jason
  * Date: 10/28/12
  * Time: 11:14 PM
- * Provides a singleton instance...
+ * Provides a singleton instance.
  */
 object DbConnection {
 
@@ -19,6 +19,5 @@ object DbConnection {
 }
 
 class DbConnection private{
-  import com.mongodb.casbah._
-  val mongoConnection = MongoConnection("localhost")
+  val mongoConnection: MongoDB = MongoConnection("localhost")(DbConnection.DATABASE_NAME)
 }
