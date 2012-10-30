@@ -10,7 +10,7 @@ import org.codehaus.jackson.annotate.JsonProperty
  * Time: 9:19 PM
  * Provides a description of one of the many gigs I've worked over the years.
  */
-class Gig(
+class Gig (
            @JsonProperty val gigId: String
            , @JsonProperty val gigName: String
            , @JsonProperty val title: String
@@ -22,4 +22,4 @@ class Gig(
            , @JsonProperty val startDate: DateTime
            , @JsonProperty val endDate: DateTime
            , @JsonProperty val skills: List[Skill]
-         )
+         ) extends Entity
