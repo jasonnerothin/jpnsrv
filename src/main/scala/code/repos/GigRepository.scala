@@ -1,7 +1,7 @@
 package code.repos
 
 import code.model.Gig
-import code.mongo.{SkillReader, GigReader}
+import code.mongo.loader.GigLoader
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,7 +10,7 @@ import code.mongo.{SkillReader, GigReader}
  * Time: 10:01 PM
  * Provides a repository for the `Gig` domain model `Entity` type.
  */
-class GigRepository(val gigReader: GigReader, val skillReader: SkillReader) extends EntityList[Gig]{
+class GigRepository(val loader: GigLoader) extends EntityList[Gig]{
 
   /**
    * Merges `Skill`s into `Gig`s and returns the list of `Gig`s.
@@ -20,4 +20,7 @@ class GigRepository(val gigReader: GigReader, val skillReader: SkillReader) exte
     null
   }
 
+  def get(gigId: String) : Gig = {
+    null
+  }
 }

@@ -1,6 +1,7 @@
 package code.repos
 
 import code.model.Skill
+import code.mongo.loader.SkillLoader
 
 /**
  * Created by IntelliJ IDEA.
@@ -9,7 +10,7 @@ import code.model.Skill
  * Time: 10:41 PM
  * Provides a repository for the `Skill` domain model `Entity` type.
  */
-class SkillRepository extends EntityList[Skill]{
+class SkillRepository(val loader: SkillLoader) extends EntityList[Skill]{
 
   /**
    * Merges `Gig` entities into list of all `Skill`s and returns the List.
@@ -17,7 +18,11 @@ class SkillRepository extends EntityList[Skill]{
    * @return all `Skill`s
    */
   def list(): List[Skill] = {
-    null
+    loader.loadAll()
+  }
+
+  def get(skillId: String): Skill = {
+    loader.loadById(skillId)
   }
 
 }

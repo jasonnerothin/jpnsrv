@@ -1,4 +1,4 @@
-package code.mongo
+package code.mongo.reader
 
 import org.junit.runner.RunWith
 import org.specs2.runner.JUnitRunner
@@ -6,8 +6,7 @@ import org.scalatest.FunSuite
 import org.scalatest.mock.MockitoSugar
 import org.mockito.{Matchers, Mockito}
 import com.mongodb.casbah.{MongoCollection, MongoDB}
-import org.specs2.specification.BeforeEach
-import org.specs2.internal.scalaz.Digit._0
+import code.mongo.DbConnection
 
 /**
  * Created by IntelliJ IDEA.

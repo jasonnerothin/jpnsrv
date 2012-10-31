@@ -1,6 +1,6 @@
-package code.mongo
+package code.mongo.reader
 
-import com.mongodb.casbah.{MongoCollectionBase, Imports, MongoCollection}
+import com.mongodb.casbah.MongoCollection
 import org.scalatest.FunSuite
 import org.scalatest.mock.MockitoSugar
 
@@ -17,7 +17,7 @@ import org.mockito.{Matchers, Mockito}
  * Time: 1:02 PM
  */
 @RunWith(classOf[JUnitRunner])
-class MongoReadingSkelTest extends FunSuite with MockitoSugar {
+class MongoReaderSkelTest extends FunSuite with MockitoSugar {
 
   val mockCollection = mock[MongoCollection]
   val testInstance = new FakeReader

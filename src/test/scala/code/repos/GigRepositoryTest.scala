@@ -5,9 +5,7 @@ import org.scalatest.{BeforeAndAfterEach, FunSuite}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.mock.MockitoSugar
-import org.specs2.specification.BeforeEach
-import code.mongo.{SkillReader, GigReader, MongoReader}
-import code.model.Gig
+import code.mongo.loader.GigLoader
 
 /**
  * Created by IntelliJ IDEA.
@@ -19,21 +17,10 @@ import code.model.Gig
 sealed class GigRepositoryTest extends FunSuite with BeforeAndAfterEach with MockitoSugar {
 
   var testInstance : GigRepository = _
-  var gigReader: GigReader = _
-  var skillReader: SkillReader = _
+  var gigReader: GigLoader = _
 
   override def beforeEach(){
-    testInstance = new GigRepository(gigReader, skillReader)
+    testInstance = new GigRepository(gigReader)
   }
-
-  test("duration is calculated from startDate and endDate"){
-
-  }
-
-  test("duration is calculated from startDate and null endDate"){
-
-  }
-
-
 
 }

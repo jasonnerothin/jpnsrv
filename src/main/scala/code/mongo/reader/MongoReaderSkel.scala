@@ -1,4 +1,4 @@
-package code.mongo
+package code.mongo.reader
 
 import com.mongodb.casbah.Imports._
 

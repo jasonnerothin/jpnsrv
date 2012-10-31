@@ -1,6 +1,7 @@
-package code.mongo
+package code.mongo.reader
 
 import com.mongodb.casbah.MongoCollection
+import code.mongo.DbConnection
 
 /**
  * Created by IntelliJ IDEA.

@@ -17,4 +17,6 @@ trait EntityList [E <: Entity]{
    */
   def list(): List[E]
 
+  def get(entityId: String) : E
+
 }
