@@ -58,13 +58,13 @@ class MongoReaderSkelTest extends FunSuite with MockitoSugar {
 
   }
 
-  test("findAll returns what it gets back from the database") {
+  test("find returns what it gets back from the database") {
 
     val testCursor: MongoCursor = mock[MongoCursor]
 
     Mockito.when(mockCollection.find()).thenReturn(testCursor)
 
-    var actual = testInstance.findAll()
+    var actual = testInstance.find()
 
     assert(actual === testCursor, "expected result to come straight back")
 

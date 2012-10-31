@@ -13,19 +13,19 @@ abstract class MongoReaderSkel extends MongoReader{
 
   def collection() : MongoCollection
 
-  final def findOne(params: MongoDBObject) : DBObject = {
+  def findOne(params: MongoDBObject) : DBObject = {
     require(params != null, "params must be non-null")
     val col = collection()
     val result: Option[DBObject] = col.findOne[MongoDBObject](params)
     if( result.isEmpty ) DBObject.empty else result.head
   }
 
-  final def find(params: MongoDBObject) : MongoCursor = {
+  def find(params: MongoDBObject) : MongoCursor = {
     require(params != null, "params must be non-null")
     collection().find(params)
   }
 
-  final def findAll() : MongoCursor = {
+  def find() : MongoCursor = {
     collection().find()
   }
 

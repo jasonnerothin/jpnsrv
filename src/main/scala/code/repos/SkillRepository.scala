@@ -1,6 +1,6 @@
 package code.repos
 
-import code.model.Skill
+import code.model.{Gig, Skill}
 import code.mongo.loader.SkillLoader
 
 /**
@@ -10,7 +10,7 @@ import code.mongo.loader.SkillLoader
  * Time: 10:41 PM
  * Provides a repository for the `Skill` domain model `Entity` type.
  */
-class SkillRepository(val loader: SkillLoader) extends EntityList[Skill]{
+class SkillRepository(val loader: SkillLoader) extends EntityLister[Skill]{
 
   /**
    * Merges `Gig` entities into list of all `Skill`s and returns the List.

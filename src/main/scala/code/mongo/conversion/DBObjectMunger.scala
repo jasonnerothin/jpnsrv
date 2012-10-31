@@ -14,7 +14,7 @@ import collection.mutable
  * represent a fully-fledged `Entity`, but merely a naive
  * representation of the fields contained within the database
  */
-trait DBObjectMunger[E <: Entity] {
+trait DBObjectMunger[Entity] {
 
   /**
    * Takes properties of d and sticks them into a
@@ -24,7 +24,7 @@ trait DBObjectMunger[E <: Entity] {
    * @param d data source
    * @return a new instance of e
    */
-  def populate(d: MongoDBObject): E
+  def populate(d: MongoDBObject): Entity
 
   /**
    * Grabs the `Entity`'s "_id" out of the mongo dbobject

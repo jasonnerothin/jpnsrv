@@ -10,7 +10,7 @@ import code.model.Entity
  * Provides a list of all domain model `Entity`s of a given
  * type
  */
-trait EntityList [E <: Entity]{
+trait EntityLister[+E <: Entity]{
 
   /**
    * @return all entities - fully populated with related types, including other entities

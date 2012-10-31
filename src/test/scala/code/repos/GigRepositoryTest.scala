@@ -1,10 +1,10 @@
 package code.repos
 
 import org.scalatest.{BeforeAndAfterEach, FunSuite}
+import org.scalatest.mock.MockitoSugar
+import org.scalatest.junit.JUnitRunner
 
 import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.mock.MockitoSugar
 import code.mongo.loader.GigLoader
 
 /**
@@ -21,6 +21,10 @@ sealed class GigRepositoryTest extends FunSuite with BeforeAndAfterEach with Moc
 
   override def beforeEach(){
     testInstance = new GigRepository(gigReader)
+  }
+
+  test("fooooo"){
+    assert(testInstance != null)
   }
 
 }

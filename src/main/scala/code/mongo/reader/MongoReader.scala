@@ -3,6 +3,7 @@ package code.mongo.reader
 import com.mongodb.casbah.commons.MongoDBObject
 import com.mongodb.casbah.MongoCursor
 import com.mongodb.DBObject
+import code.model.Entity
 
 
 /**
@@ -13,10 +14,21 @@ import com.mongodb.DBObject
  */
 trait MongoReader {
 
+  /**
+   * @param params query params
+   * @return zero or one db results
+   */
   def findOne(params: MongoDBObject) : DBObject
 
+  /**
+   * @param params query params
+   * @return db cursor for result collection
+   */
   def find(params: MongoDBObject) : MongoCursor
 
-  def findAll() : MongoCursor
+  /**
+   * @return all
+   */
+  def find(): MongoCursor
 
 }

@@ -23,6 +23,36 @@ class Gig (
            , @JsonProperty val endDate: DateTime
            , @JsonProperty val durationInMillis: Long
            , @JsonProperty val skills: List[Skill]
-         ) extends Entity
+         ) extends Entity{
+
+  /**
+   * returns the application-assigned "entityId"
+   * for this entity: skillId for `Skill`, gigId for `Gigs`, etc
+   */
+  override def entityId = gigId
+
+  /**
+   * Sets skills on a new instance of Gig. All other properties copied over from this
+   * @param skills to set
+   * @return a new instance with entities set
+   */
+  override def mergeWith(skills: List[Entity]) : Gig ={
+    new Gig(
+      this.gigId,
+      this.gigName,
+      this.title,
+      this.employer,
+      this.blurb,
+      this.cityState,
+      this.methodology,
+      this.result,
+      this.startDate,
+      this.endDate,
+      this.durationInMillis,
+      skills.asInstanceOf[List[Skill]] // TODO replace with proper, polymorphic type-safety/variance
+    )
+  }
+
+}
 
 class GigKeys(val oid: String, val skillOids: List[String]) extends EntityKey
