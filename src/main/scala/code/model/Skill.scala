@@ -63,6 +63,7 @@ class Skill( @JsonProperty val skillId: String
    * @return a new instance with gigs set and experience calculated
    */
   override def mergeWith(gigs: List[Entity]): Skill = {
+    // TODO these first 4 lines are wrong
     var list = List[Gig]()
     for{ e <- gigs }{
       list = e.asInstanceOf[Gig]::list

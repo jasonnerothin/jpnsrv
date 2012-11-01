@@ -39,6 +39,8 @@ sealed class GigLoaderTest extends FunSuite with MockitoSugar with BeforeAndAfte
   var skill1: Skill = _
   var gig: Gig = _
 
+  var skillMatcher: EntityMatcher[Skill] = _
+
   override def beforeEach(){
 
     gigReader = mock[GigReader]
@@ -52,9 +54,11 @@ sealed class GigLoaderTest extends FunSuite with MockitoSugar with BeforeAndAfte
     dbObject = mock[DBObject]
     gigKeys = mock[GigKeys]
 
-    skill0 = aSkill()
-    skill1 = aSkill()
+    skill0 = mock[Skill]
+    skill1 = mock[Skill]
     gig = mock[Gig]
+
+    skillMatcher = new EntityMatcher[Skill](skill0, skill1)
 
     when(gigReader.find()).thenReturn(cursor)
     when(gigReader.findOne(isA(classOf[MongoDBObject]))).thenReturn(dbObject)
@@ -71,22 +75,8 @@ sealed class GigLoaderTest extends FunSuite with MockitoSugar with BeforeAndAfte
   test("skills end up in gig list during findById"){
 
     testInstance.loadById("foo")
-    verify(gig,times(1)).mergeWith(argThat[List[Skill]](new SkillMatcher()))
+    verify(gig,times(1)).mergeWith(argThat[List[Skill]](skillMatcher))
 
-  }
-
-  class SkillMatcher extends ArgumentMatcher[List[Skill]]{
-    def matches(argument: Any): Boolean = {
-      if ( argument == null ) false
-      if ( !(argument.isInstanceOf[List[Skill]])) false
-      var skillz = argument.asInstanceOf[List[Skill]]
-      var matchCnt = 0
-      for (s <- skillz){
-        if (skill0 == s) matchCnt = matchCnt + 1
-        if (skill1 == s) matchCnt = matchCnt + 1
-      }
-      matchCnt == 2
-    }
   }
 
   test("skills end up in gig list during findAll"){
@@ -94,12 +84,8 @@ sealed class GigLoaderTest extends FunSuite with MockitoSugar with BeforeAndAfte
       when( cursor withFilter(anyObject())) thenReturn Iterator(dbObject)
 
       testInstance.loadAll()
-      verify(gig, times(1)).mergeWith(argThat[List[Skill]](new SkillMatcher()))
+      verify(gig, times(1)).mergeWith(argThat[List[Skill]](skillMatcher))
     }
   }
-
-  private def aGig() = new Gig(str(),str(),str(),str(),str(),str(),str(),str(),new DateTime, new DateTime,0,List())
-  private def aSkill(): Skill = new Skill(str(),str(),List(str(),str(),str()),0,List())
-  private def str(): String = new Generator().randomStr
 
 }

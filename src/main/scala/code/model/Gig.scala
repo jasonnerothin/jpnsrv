@@ -32,7 +32,7 @@ class Gig (
   override def entityId = gigId
 
   /**
-   * Sets skills on a new instance of Gig. All other properties copied over from this
+   * Sets skills on a new instance of Gig. All other properties are copied over from this
    * @param skills to set
    * @return a new instance with entities set
    */

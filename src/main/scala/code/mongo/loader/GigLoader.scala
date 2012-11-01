@@ -1,10 +1,9 @@
 package code.mongo.loader
 
 import code.model.{Skill, GigKeys, Gig}
-import code.mongo.reader.{SkillReader, GigReader}
+import code.mongo.reader.{SearchParam, SkillReader, GigReader}
 import code.mongo.conversion.{SkillMunger, GigMunger}
 import com.mongodb.casbah.commons.MongoDBObject
-import com.mongodb.DBObject
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,10 +12,12 @@ import com.mongodb.DBObject
  * Time: 11:58 PM
  * Provides a `Loader` for `Gigs`
  */
+// TODO this class is nearly identical to `SkillLoader` and both should be refactored into a single class
+// TODO with the appropriate support of generics and variances
 class GigLoader(gigReader: GigReader,
                 gigMunger: GigMunger,
                 skillReader: SkillReader,
-                skillMunger: SkillMunger) extends Loader[Gig] {
+                skillMunger: SkillMunger) extends Loader[Gig] with SearchParam{
 
   /**
    * Loads a `Gig`and merges companion `Skills` into a detail version
@@ -26,7 +27,7 @@ class GigLoader(gigReader: GigReader,
     val dbo = new MongoDBObject(gigReader.findOne(searchParam("gigId", gigId)))
     val gig = gigMunger.populate(dbo)
     val gigKeys = gigMunger.extractOids(dbo)
-    merge(gig, gigKeys)
+    pullInSkills(gig, gigKeys)
   }
 
   /**
@@ -38,9 +39,9 @@ class GigLoader(gigReader: GigReader,
     var cursor = gigReader.find()
     val gigDbos = (for (dbo <- cursor) yield new MongoDBObject(dbo)).toList
     for {dbo <- gigDbos} {
-      val gig: Gig = gigMunger.populate(dbo)
-      val gigKeys: GigKeys = gigMunger.extractOids(dbo)
-      val newList = merge(gig, gigKeys)::gigList
+      val gig = gigMunger.populate(dbo)
+      val gigKeys = gigMunger.extractOids(dbo)
+      val newList = pullInSkills(gig, gigKeys)::gigList
       gigList = newList
     }
     gigList
@@ -53,7 +54,7 @@ class GigLoader(gigReader: GigReader,
    * @param gigKeys skill oid container
    * @return a merged gig
    */
-  protected [loader] def merge(gig: Gig, gigKeys: GigKeys): Gig = {
+  protected [loader] def pullInSkills(gig: Gig, gigKeys: GigKeys): Gig = {
     val skillOids = gigKeys.skillOids
     var list = List[Skill]()
     for {skillOid <- skillOids} {
@@ -62,12 +63,6 @@ class GigLoader(gigReader: GigReader,
       list = newList
     }
     gig mergeWith list
-  }
-
-  private def searchParam(propName: String, propVal: String): MongoDBObject = {
-    val builder = MongoDBObject.newBuilder
-    builder += propName -> propVal
-    new MongoDBObject(builder.result())
   }
 
 }
