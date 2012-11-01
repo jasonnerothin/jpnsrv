@@ -25,6 +25,22 @@ class Gig (
            , @JsonProperty val skills: List[Skill]
          ) extends Entity{
 
+
+  // THIS UGLY HACK IS FORCED UPON US BY Jackson, which
+  // expects Java Bean conventions
+  val getGigId = gigId
+  val getGigName = gigName
+  val getTitle = title
+  val getEmployer = employer
+  val getBlurb = blurb
+  val getCityState = cityState
+  val getMethodology = methodology
+  val getResult = result
+  val getStartDate = startDate
+  val getDurationInMillis = durationInMillis
+  val getEndDate = endDate
+  val getSkills = skills
+
   /**
    * returns the application-assigned "entityId"
    * for this entity: skillId for `Skill`, gigId for `Gigs`, etc

@@ -18,6 +18,15 @@ class Skill( @JsonProperty val skillId: String
              , @JsonProperty val categories: List[String]
              , @JsonProperty val monthsOfExperience: Int
              , @JsonProperty val gigs: List[Gig] ) extends Entity{
+
+  // Jackson requires that we make our value class sort of like a
+  // JavaBean... Pardon the unpleasantness!
+  val getSkillId = skillId
+  val getSkillName = skillName
+  val getCategories = categories
+  val getMonthsOfExperience = monthsOfExperience
+  val getGigs = gigs
+
   /**
    * returns the application-assigned "entityId"
    * for this entity: skillId for `Skill`, gigId for `Gigs`, etc

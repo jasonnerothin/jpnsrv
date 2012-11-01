@@ -3,6 +3,7 @@ package code.testutil
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
+import org.joda.time.DateTime
 
 /**
  * Created by IntelliJ IDEA.
@@ -27,6 +28,22 @@ class GeneratorTest extends FunSuite {
     val actual = testInstance.randomStr(56)
 
     assert(actual.length === 56, "56 is just right")
+  }
+
+  test("random date in the past at least 1 second in the past"){
+    val now = new DateTime()
+    val actual = testInstance.dateInThePast()
+
+    assert( now.minusSeconds(1) isAfter actual )
+
+  }
+
+  test("date in the future is at least 15 seconds in the future"){
+    val now = new DateTime()
+    val actual = testInstance.dateInTheFuture()
+
+    assert(actual.minusSeconds(15) isAfter now)
+
   }
 
 }

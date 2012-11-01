@@ -10,18 +10,18 @@ import code.model.Entity
  * Provides an adapter around reading from mongo and conversion of
  * mongo records to `Entity` types
  */
-trait Loader [+E <: Entity]{
+trait Loader[+E <: Entity]{
 
   /**
    * Loads and merges companion `Entities` into a detail version of this `Entity`
    * @param appId application assigned id - e.g. skillId for skills, gigId for gigs, etc
    */
-  def loadById(appId: String) : E
+  def loadById(appId: String): E
 
   /**
    * Loads and merges companion `Entities` into detail records
    * @return list of detailed `E` records
    */
-  def loadAll() : List[E]
+  def loadAll(): List[E]
 
 }

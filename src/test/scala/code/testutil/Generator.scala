@@ -1,6 +1,7 @@
 package code.testutil
 
 import util.Random
+import org.joda.time.DateTime
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,6 +46,30 @@ class Generator{
     val as = someAs(len)
     for { i <- 0 to len-1} buf.append(as(i).ch)
     buf.toString()
+  }
+
+  /**
+   * @return random date, at least one second in the past
+   */
+  def dateInThePast(): DateTime = {
+    new DateTime()
+      .minusYears(Random.nextInt(10))
+      .minusMonths(Random.nextInt(12))
+      .minusHours(Random.nextInt(24))
+      .minusMinutes(Random.nextInt(60))
+      .minusSeconds(Random.nextInt(59) + 1)
+  }
+
+  /**
+   * @return a random date at least 15 seconds from now
+   */
+  def dateInTheFuture(): DateTime = {
+    new DateTime()
+      .plusYears(Random.nextInt(10))
+      .plusMonths(Random.nextInt(12))
+      .plusHours(Random.nextInt(24))
+      .plusMinutes(Random.nextInt(60))
+      .plusSeconds(Random.nextInt(45)+15)
   }
 
 }
