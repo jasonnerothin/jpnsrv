@@ -3,6 +3,7 @@ package code.mongo.conversion
 import code.model.{EntityKey, Entity}
 import com.mongodb.casbah.commons.{MongoDBList, MongoDBObject}
 import collection.mutable
+import org.bson.types.ObjectId
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,6 +46,12 @@ trait DBObjectMunger[Entity] {
   protected[conversion] def stringOrNull(propName: String, d: MongoDBObject): String ={
     val str: Option[String] = d.getAs[String](propName)
     if ( str.isEmpty ) null else str.get
+  }
+
+  protected[conversion] def oidAsStringOrNull(propName: String, d: MongoDBObject): String = {
+    val opt: Option[ObjectId] = d.getAs[ObjectId](propName)
+    val oid = opt getOrElse null
+    if ( oid == null ) null else oid.toString
   }
 
   /**

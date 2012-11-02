@@ -47,7 +47,7 @@ class SkillMunger extends DBObjectMunger[Skill]{
    * @return all of the oids, in one little package
    */
   def extractOids(d: MongoDBObject): SkillKeys = {
-    val oid = stringOrNull("_id", d)
+    val oid = oidAsStringOrNull("_id", d)
     require(oid != null, "_id value may not be null")
     val list = asList("gigs", d)
     new SkillKeys(oid, list)

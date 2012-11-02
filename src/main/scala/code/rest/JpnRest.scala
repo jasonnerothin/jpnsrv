@@ -54,7 +54,7 @@ object JpnRest {
   }
 
   private def asResponse(json: String): LiftResponse = {
-    JsonResponse(Str(json))
+    JsonResponse(json)
   }
 
 }
