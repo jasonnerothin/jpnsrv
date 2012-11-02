@@ -57,14 +57,16 @@ class Boot {
 
     // where to search snippet
     LiftRules.addToPackages("code")
-    LiftRules.statelessDispatch.append(JpnRest)
+//    LiftRules.statelessDispatch.append(JpnRest)
 
     JpnRest.gigLoader = gigLoader
     JpnRest.gigWriter = gigWriter
     JpnRest.skillLoader = skillLoader
     JpnRest.skillWriter = skillWriter
 
-    LiftRules.statelessDispatch.append(JpnRest)
+    LiftRules.dispatch.prepend(JpnRest.dispatch)
+
+//    LiftRules.statelessDispatch.append(JpnRest)
 
     // Build SiteMap
     def sitemap = SiteMap(

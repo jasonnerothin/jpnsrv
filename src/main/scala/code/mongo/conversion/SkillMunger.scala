@@ -1,6 +1,6 @@
 package code.mongo.conversion
 
-import code.model.{Gig, SkillKeys, Skill}
+import code.model.{GigKeys, Gig, SkillKeys, Skill}
 import com.mongodb.casbah.commons.MongoDBObject
 
 /**
@@ -46,6 +46,11 @@ class SkillMunger extends DBObjectMunger[Skill]{
    * @param d datbase object
    * @return all of the oids, in one little package
    */
-  def extractOids(d: MongoDBObject): SkillKeys = null
+  def extractOids(d: MongoDBObject): SkillKeys = {
+    val oid = stringOrNull("_id", d)
+    require(oid != null, "_id value may not be null")
+    val list = asList("gigs", d)
+    new SkillKeys(oid, list)
+  }
 
 }

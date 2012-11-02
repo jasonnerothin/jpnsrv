@@ -2,16 +2,12 @@ package code.rest
 
 import net.liftweb.http._
 import js.JE.Str
-import js.JsExp
 import net.liftweb.http.rest._
-import code.jackson.{JsonWriterService, SkillWriterService, GigWriterService}
-import testing.Item
-import net.liftweb.json.JsonAST.{JArray, JString, JValue, JInt}
-import javax.swing.JList
-import collection.GenTraversable
+import code.jackson.JsonWriterService
 import net.liftweb.common.Full
 import code.model.{Skill, Gig}
 import code.mongo.loader.Loader
+import net.liftweb.json.JsonAST.{JInt, JValue}
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,24 +17,39 @@ import code.mongo.loader.Loader
  * Provides
  */
 
-object JpnRest extends RestHelper {
+object JpnRest {
 
   var gigWriter: JsonWriterService[Gig] = _
   var gigLoader: Loader[Gig] = _
   var skillWriter: JsonWriterService[Skill] = _
   var skillLoader: Loader[Skill] = _
 
-  serve {
-    case Req("api" :: "gigs" :: Nil,
-      suffix, GetRequest) => () =>
+  def dispatch: LiftRules.DispatchPF = {
+
+      case Req("api" :: "gigs" :: Nil, suffix, GetRequest) => () =>
         Full(asResponse(gigWriter.jsonForAllAndToAllAGoodNight(gigLoader)))
 
-    case Req("api" :: "skills" :: Nil, suffix, GetRequest) => () =>
-      Full(asResponse(skillWriter.jsonForAllAndToAllAGoodNight(skillLoader)))
+//    serve {
+//      case Req("api" :: "skills" :: Nil, suffix, GetRequest) => () =>
+//        Full(asResponse(skillWriter.jsonForAllAndToAllAGoodNight(skillLoader)))
+//    }
+//
+//    serve {
+//      case Req("rest" :: "gigs" :: entityId :: Nil,
+//      suffix, GetRequest) => () =>
+//        Full(asResponse(gigWriter.jsonForEntityId("jasonnerothin.com", gigLoader)))
+//
+//    }
 
-    case Req("rest" :: "gigs" :: entityId :: Nil,
-      suffix, GetRequest) => () =>
-        Full(asResponse(gigWriter.jsonForEntityId("jasonnerothin.com", gigLoader)))
+      case Req("api"::_::Nil, suffix, GetRequest) => () => {
+        val y = 23
+        Full(asResponse("babababa"))
+      }
+
+      case _ => () =>{
+        val x = 23
+        Full(asResponse(skillWriter.jsonForAllAndToAllAGoodNight(skillLoader)))
+      }
 
   }
 
@@ -48,4 +59,6 @@ object JpnRest extends RestHelper {
 
 }
 
-
+object Foo {
+  def method = JInt(12)
+}

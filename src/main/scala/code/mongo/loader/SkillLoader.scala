@@ -36,7 +36,7 @@ class SkillLoader(skillReader: SkillReader,
    */
   def loadAll(): List[Skill] = {
     var skillList = List[Skill]()
-    var cursor = gigReader.find()
+    var cursor = skillReader.find()
     val skillDbos = (for ( dbo <- cursor ) yield new MongoDBObject(dbo))
     for ( dbo <- skillDbos ){
       val skill = skillMunger.populate(dbo)
