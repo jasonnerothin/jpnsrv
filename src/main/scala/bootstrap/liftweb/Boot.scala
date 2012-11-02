@@ -57,6 +57,7 @@ class Boot {
 
     // where to search snippet
     LiftRules.addToPackages("code")
+    LiftRules.statelessDispatch.append(JpnRest)
 
     JpnRest.gigLoader = gigLoader
     JpnRest.gigWriter = gigWriter
