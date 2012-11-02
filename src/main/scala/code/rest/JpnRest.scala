@@ -1,13 +1,12 @@
 package code.rest
 
 import net.liftweb.http._
-import js.JE.Str
-import net.liftweb.http.rest._
 import code.jackson.JsonWriterService
 import net.liftweb.common.Full
 import code.model.{Skill, Gig}
 import code.mongo.loader.Loader
 import net.liftweb.json.JsonAST.{JInt, JValue}
+import rest.RestHelper
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,48 +16,25 @@ import net.liftweb.json.JsonAST.{JInt, JValue}
  * Provides
  */
 
-object JpnRest {
+object JpnRest extends RestHelper {
 
   var gigWriter: JsonWriterService[Gig] = _
   var gigLoader: Loader[Gig] = _
   var skillWriter: JsonWriterService[Skill] = _
   var skillLoader: Loader[Skill] = _
 
-  def dispatch: LiftRules.DispatchPF = {
+  serve("api" / "gigs" prefix {
 
-      case Req("api" :: "gigs" :: Nil, suffix, GetRequest) => () =>
-        Full(asResponse(gigWriter.jsonForAllAndToAllAGoodNight(gigLoader)))
+    case Req("all"::Nil, suffix, GetRequest) =>
+      () => Full(jsonResponse(skillWriter.jsonForAllAndToAllAGoodNight(skillLoader)))
 
-//    serve {
-//      case Req("api" :: "skills" :: Nil, suffix, GetRequest) => () =>
-//        Full(asResponse(skillWriter.jsonForAllAndToAllAGoodNight(skillLoader)))
-//    }
-//
-//    serve {
-//      case Req("rest" :: "gigs" :: entityId :: Nil,
-//      suffix, GetRequest) => () =>
-//        Full(asResponse(gigWriter.jsonForEntityId("jasonnerothin.com", gigLoader)))
-//
-//    }
+    case Req( _, suffix, GetRequest) =>
+      () => Full(ResponseWithReason(BadResponse(), "bad request"))
 
-      case Req("api"::_::Nil, suffix, GetRequest) => () => {
-        val y = 23
-        Full(asResponse("babababa"))
-      }
+  })
 
-      case _ => () =>{
-        val x = 23
-        Full(asResponse(skillWriter.jsonForAllAndToAllAGoodNight(skillLoader)))
-      }
-
+  private def jsonResponse(json: String): LiftResponse = {
+    PlainTextResponse(json, List("ContentType" -> "application/json"), 200)
   }
 
-  private def asResponse(json: String): LiftResponse = {
-    JsonResponse(json)
-  }
-
-}
-
-object Foo {
-  def method = JInt(12)
 }

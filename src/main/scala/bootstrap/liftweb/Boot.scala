@@ -64,7 +64,7 @@ class Boot {
     JpnRest.skillLoader = skillLoader
     JpnRest.skillWriter = skillWriter
 
-    LiftRules.dispatch.prepend(JpnRest.dispatch)
+    LiftRules.statelessDispatch.prepend(JpnRest)
 
 //    LiftRules.statelessDispatch.append(JpnRest)
 
