@@ -13,6 +13,12 @@ import mapper._
 
 import code.model._
 import net.liftmodules.JQueryModule
+import code.rest.JpnRest
+import code.jackson.{SkillWriterService, GigWriterService, JsonWriterService}
+import code.mongo.loader.{GigLoader, SkillLoader, Loader}
+import code.mongo.DbConnection
+import code.mongo.reader.{SkillReader, GigReader}
+import code.mongo.conversion.{SkillMunger, GigMunger}
 
 
 /**
@@ -20,13 +26,24 @@ import net.liftmodules.JQueryModule
  * to modify lift's environment
  */
 class Boot {
-  def boot {
+
+  val dbConnection = DbConnection.INSTANCE
+  val gigReader = new GigReader(dbConnection)
+  val gigMunger = new GigMunger()
+  val skillReader = new SkillReader(dbConnection)
+  val skillMunger = new SkillMunger()
+  val gigLoader = new GigLoader(gigReader, gigMunger, skillReader, skillMunger)
+  val skillLoader = new SkillLoader(skillReader, skillMunger, gigReader, gigMunger)
+  val gigWriter = new GigWriterService(gigLoader)
+  val skillWriter = new SkillWriterService(skillLoader)
+
+  def boot() {
     if (!DB.jndiJdbcConnAvailable_?) {
-      val vendor = 
-	new StandardDBVendor(Props.get("db.driver") openOr "org.h2.Driver",
-			     Props.get("db.url") openOr 
-			     "jdbc:h2:lift_proto.db;AUTO_SERVER=TRUE",
-			     Props.get("db.user"), Props.get("db.password"))
+      val vendor =
+        new StandardDBVendor(Props.get("db.driver") openOr "org.h2.Driver",
+          Props.get("db.url") openOr
+            "jdbc:h2:lift_proto.db;AUTO_SERVER=TRUE",
+          Props.get("db.user"), Props.get("db.password"))
 
       LiftRules.unloadHooks.append(vendor.closeAllConnections_! _)
 
@@ -40,6 +57,7 @@ class Boot {
 
     // where to search snippet
     LiftRules.addToPackages("code")
+    LiftRules.statelessDispatch.append(JpnRest)
 
     // Build SiteMap
     def sitemap = SiteMap(
@@ -47,8 +65,7 @@ class Boot {
 
       // more complex because this menu allows anything in the
       // /static path to be visible
-      Menu(Loc("Static", Link(List("static"), true, "/static/index"), 
-	       "Static Content")))
+      Menu(Loc("Static", Link(List("static"), matchHead_? = true, url = "/static/index"), "Static Content")))
 
     def sitemapMutators = User.sitemapMutator
 
@@ -58,13 +75,13 @@ class Boot {
 
     //Init the jQuery module, see http://liftweb.net/jquery for more information.
     LiftRules.jsArtifacts = JQueryArtifacts
-    JQueryModule.InitParam.JQuery=JQueryModule.JQuery172
+    JQueryModule.InitParam.JQuery = JQueryModule.JQuery172
     JQueryModule.init()
 
     //Show the spinny image when an Ajax call starts
     LiftRules.ajaxStart =
       Full(() => LiftRules.jsArtifacts.show("ajax-loader").cmd)
-    
+
     // Make the spinny image go away when it ends
     LiftRules.ajaxEnd =
       Full(() => LiftRules.jsArtifacts.hide("ajax-loader").cmd)
@@ -77,7 +94,7 @@ class Boot {
 
     // Use HTML5 for rendering
     LiftRules.htmlProperties.default.set((r: Req) =>
-      new Html5Properties(r.userAgent))    
+      new Html5Properties(r.userAgent))
 
     // Make a transaction span the whole HTTP request
     S.addAround(DB.buildLoanWrapper)
