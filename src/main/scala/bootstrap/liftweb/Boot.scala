@@ -13,7 +13,7 @@ import mapper._
 
 import code.model._
 import net.liftmodules.JQueryModule
-import code.rest.JpnRest
+import code.rest.{SkillRestService, GigRestService}
 import code.jackson.{SkillWriterService, GigWriterService, JsonWriterService}
 import code.mongo.loader.{GigLoader, SkillLoader, Loader}
 import code.mongo.DbConnection
@@ -57,16 +57,14 @@ class Boot {
 
     // where to search snippet
     LiftRules.addToPackages("code")
-//    LiftRules.statelessDispatch.append(JpnRest)
 
-    JpnRest.gigLoader = gigLoader
-    JpnRest.gigWriter = gigWriter
-    JpnRest.skillLoader = skillLoader
-    JpnRest.skillWriter = skillWriter
+    GigRestService.gigLoader = gigLoader
+    GigRestService.gigWriter = gigWriter
+    LiftRules.statelessDispatch.prepend(GigRestService)
 
-    LiftRules.statelessDispatch.prepend(JpnRest)
-
-//    LiftRules.statelessDispatch.append(JpnRest)
+    SkillRestService.skillLoader = skillLoader
+    SkillRestService.skillWriter = skillWriter
+    LiftRules.statelessDispatch.prepend(SkillRestService)
 
     // Build SiteMap
     def sitemap = SiteMap(

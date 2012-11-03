@@ -1,12 +1,12 @@
 package code.mongo.conversion
 
 import org.junit.runner.RunWith
-import org.specs2.runner.JUnitRunner
-import org.scalatest.FunSuite
+import org.scalatest.{BeforeAndAfterEach, FunSuite}
 import org.scalatest.mock.MockitoSugar
 import com.mongodb.casbah.commons.{MongoDBList, MongoDBObject}
 import org.joda.time.DateTime
 import code.model.Gig
+import org.scalatest.junit.JUnitRunner
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,7 +15,7 @@ import code.model.Gig
  * Time: 1:04 AM
  */
 @RunWith(classOf[JUnitRunner])
-class GigMungerTest extends FunSuite with MockitoSugar {
+class GigMungerTest extends FunSuite with MockitoSugar with BeforeAndAfterEach {
 
   val testInstance: GigMunger = new GigMunger
 
@@ -27,8 +27,9 @@ class GigMungerTest extends FunSuite with MockitoSugar {
   val methodology = "slave labor"
   val result = "victory"
   val gigName = "yada yada"
-  val startDate:DateTime = new DateTime()
-  val endDate:DateTime= startDate.plusYears(2)
+  val sdAd = new DateTime()
+  val startDate:Long = sdAd.plusYears(-4).toDate.getTime
+  val endDate: Long= sdAd.plusYears(2).toDate.getTime
   val oid: String = "110010101001010"
   val skillOid0 = "2020120301002300123"
   val skillOid1 = "2020120301002300124"
@@ -36,7 +37,7 @@ class GigMungerTest extends FunSuite with MockitoSugar {
 
   var dbObject: MongoDBObject = _
 
-  def before(){
+  override def beforeEach(){
 
     val builder = MongoDBObject.newBuilder
 
@@ -68,8 +69,6 @@ class GigMungerTest extends FunSuite with MockitoSugar {
 
   test ("populate gets all fields correctly"){
 
-    before()
-
     val actual: Gig = testInstance.populate(dbObject)
 
     assert(actual.gigId === gigId, "gigId is wrong")
@@ -79,15 +78,14 @@ class GigMungerTest extends FunSuite with MockitoSugar {
     assert(actual.cityState === cityState, "incorrect cityState")
     assert(actual.methodology === methodology, "methodology is all wrong (always is)")
     assert(actual.gigName === gigName, "gigName is wrong")
-    assert(actual.startDate === startDate, "startDate is wrong")
-    assert(actual.endDate === endDate, "endDate is wrong" )
+    assert(actual.startDate === new DateTime(startDate), "startDate is wrong")
+    assert(actual.endDate === new DateTime(endDate), "endDate is wrong" )
     assert(actual.result === result, "result is wrong")
 
   }
 
   test("populate gets null endDate okay"){
 
-    before()
     dbObject.update("endDate", null)
 
     val actual: Gig = testInstance.populate(dbObject)
@@ -96,27 +94,24 @@ class GigMungerTest extends FunSuite with MockitoSugar {
   }
 
   test("populate calculates durationInMillis correctly when endDate is set"){
-    before()
 
-    val millis = long2Long(endDate.getMillis - startDate.getMillis)
+    val millis = long2Long(endDate - startDate )
     val actual = testInstance.populate(dbObject).durationInMillis
 
     assert(millis === actual, "duration should be the same, but was not.")
   }
 
   test("populate calculates durationInMillis correctly when endDate is not set"){
-    before()
 
     val actual = testInstance.populate(dbObject).durationInMillis
     val now = new DateTime
-    val millis = long2Long(now.getMillis - startDate.getMillis)
+    val millis = long2Long(now.getMillis - startDate)
     val diff:Long = millis - actual
 
     assert( diff < 1000, "now shouldn't be more than a second after duration was calculated")
   }
 
   test("populate creates empty skill set"){
-    before()
 
     val actual: Gig = testInstance.populate(dbObject)
 
@@ -127,7 +122,6 @@ class GigMungerTest extends FunSuite with MockitoSugar {
 
   // todo until we learn otherwise from Jackson, for example...
   test("unset values result in good clean nulls"){
-    before()
 
     dbObject.remove("employer")
     dbObject.remove("gigName")

@@ -27,13 +27,20 @@ class GigMunger extends DBObjectMunger[Gig] {
    */
   def populate(d: MongoDBObject): Gig = {
 
+    assert(d != null)
+
     def string(propName: String): Option[String] = {
       d.getAs[String](propName)
     }
 
     def dateTime(propName: String): Option[DateTime] = {
       RegisterJodaTimeConversionHelpers()
-      d.getAs[DateTime](propName)
+      if ( d == null || propName == null ){
+        val x =23
+      }
+      val t = d.get(propName)
+      if ( t.isEmpty ) None
+      else Some(new DateTime(t.get))
     }
 
     val startDate = dateTime("startDate")
@@ -75,7 +82,7 @@ class GigMunger extends DBObjectMunger[Gig] {
    * @return all of the oids, in one little package
    */
   def extractOids(d: MongoDBObject) : GigKeys = {
-    val oid = stringOrNull("_id", d)
+    val oid = oidAsStringOrNull("_id", d)
     require(oid != null, "_id value may not be null")
     val list = asList("skills", d)
     new GigKeys(oid, list)
