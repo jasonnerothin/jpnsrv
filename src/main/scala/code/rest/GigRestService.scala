@@ -24,7 +24,7 @@ object GigRestService extends RestHelper {
     case Req("all"::Nil, suffix, GetRequest) =>
       () => Responder.jsonResponse(gigWriter.jsonForAllAndToAllAGoodNight(gigLoader))
 
-    // /rest/gigs/search/someGigId or /rest/gigs/search?gigId=someGigId
+    // /rest/gigs/search?gigId=someGigId
     case "search" :: gigId JsonGet _ =>
        () => {
          if( S.params("gigId").isEmpty )
@@ -51,7 +51,7 @@ object SkillRestService extends RestHelper{
     case Req("all"::Nil, suffix, GetRequest) =>
       () => Responder.jsonResponse(skillWriter.jsonForAllAndToAllAGoodNight(skillLoader))
 
-    // /rest/skills/search/someSkillId or /rest/skills/search?skillId=someSkillId
+    // /rest/skills/search?skillId=someSkillId
     case "search" :: skillId JsonGet _ =>
       () => {
         if( S.params("skillId").isEmpty )
