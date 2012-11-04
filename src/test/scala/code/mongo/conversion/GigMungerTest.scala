@@ -27,9 +27,8 @@ class GigMungerTest extends FunSuite with MockitoSugar with BeforeAndAfterEach {
   val methodology = "slave labor"
   val result = "victory"
   val gigName = "yada yada"
-  val sdAd = new DateTime()
-  val startDate:Long = sdAd.plusYears(-4).toDate.getTime
-  val endDate: Long= sdAd.plusYears(2).toDate.getTime
+  val startDate:DateTime = new DateTime()
+  val endDate:DateTime= startDate.plusYears(2)
   val oid: String = "110010101001010"
   val skillOid0 = "2020120301002300123"
   val skillOid1 = "2020120301002300124"
@@ -95,7 +94,7 @@ class GigMungerTest extends FunSuite with MockitoSugar with BeforeAndAfterEach {
 
   test("populate calculates durationInMillis correctly when endDate is set"){
 
-    val millis = long2Long(endDate - startDate )
+    val millis = long2Long(endDate.getMillis - startDate.getMillis)
     val actual = testInstance.populate(dbObject).durationInMillis
 
     assert(millis === actual, "duration should be the same, but was not.")
@@ -105,7 +104,7 @@ class GigMungerTest extends FunSuite with MockitoSugar with BeforeAndAfterEach {
 
     val actual = testInstance.populate(dbObject).durationInMillis
     val now = new DateTime
-    val millis = long2Long(now.getMillis - startDate)
+    val millis = long2Long(now.getMillis - startDate.getMillis)
     val diff:Long = millis - actual
 
     assert( diff < 1000, "now shouldn't be more than a second after duration was calculated")

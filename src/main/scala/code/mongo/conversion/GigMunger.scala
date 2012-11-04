@@ -35,12 +35,7 @@ class GigMunger extends DBObjectMunger[Gig] {
 
     def dateTime(propName: String): Option[DateTime] = {
       RegisterJodaTimeConversionHelpers()
-      if ( d == null || propName == null ){
-        val x =23
-      }
-      val t = d.get(propName)
-      if ( t.isEmpty ) None
-      else Some(new DateTime(t.get))
+      d.getAs[DateTime](propName)
     }
 
     val startDate = dateTime("startDate")
