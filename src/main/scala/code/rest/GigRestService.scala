@@ -6,11 +6,6 @@ import net.liftweb.common.Full
 import code.model.{Skill, Gig}
 import code.mongo.loader.Loader
 import rest.RestHelper
-import org.joda.time.DateTime
-import org.codehaus.jackson.map.{SerializationConfig, ObjectMapper}
-import com.fasterxml.jackson.module.scala.DefaultScalaModule
-import org.joda.time.chrono.GregorianChronology
-import com.mongodb.casbah.commons.conversions.scala.RegisterJodaTimeConversionHelpers
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,6 +24,19 @@ object GigRestService extends RestHelper {
     case Req("all"::Nil, suffix, GetRequest) =>
       () => Responder.jsonResponse(gigWriter.jsonForAllAndToAllAGoodNight(gigLoader))
 
+    // /rest/gigs/search/someGigId or /rest/gigs/search?gigId=someGigId
+    case "search" :: gigId JsonGet _ =>
+       () => {
+         if( S.params("gigId").isEmpty )
+           Full(BadResponse())
+         else{
+           val gigId = S.params("gigId").head
+           val b = new StringBuilder
+           gigWriter.writeJsonEntityId(b, gigId)
+           Responder.jsonResponse(b.toString())
+         }
+       }
+
   })
 
 }
@@ -43,8 +51,19 @@ object SkillRestService extends RestHelper{
     case Req("all"::Nil, suffix, GetRequest) =>
       () => Responder.jsonResponse(skillWriter.jsonForAllAndToAllAGoodNight(skillLoader))
 
+    // /rest/skills/search/someSkillId or /rest/skills/search?skillId=someSkillId
+    case "search" :: skillId JsonGet _ =>
+      () => {
+        if( S.params("skillId").isEmpty )
+          Full(BadResponse())
+        else{
+          val skillId = S.params("skillId").head
+          val b = new StringBuilder
+          skillWriter.writeJsonEntityId(b, skillId)
+          Responder.jsonResponse(b.toString())
+        }
+      }
   })
-
 
 }
 
@@ -54,38 +73,4 @@ protected [rest] object Responder{
     Full(PlainTextResponse(json, List("ContentType" -> "application/json"), 200))
   }
 
-}
-
-object RunMe{
-
-
-  def main(args: Array[String]) {
-
-    RegisterJodaTimeConversionHelpers()
-
-    val oct24_2012 = new DateTime(2012, 10, 24, 18, 0, 0, 0)
-    val aug16_2010 = new DateTime(2010, 8, 16, 8, 0, 0, 0)
-    val mar17_2008 = new DateTime(2008, 3, 17, 17, 0, 0, 0)
-    val nov5_2007 = new DateTime(2007, 11, 5, 6, 0, 0, 0)
-    val oct5_2005 = new DateTime(2005, 10, 5, 11, 0, 0, 0)
-    val sep29_2004 = new DateTime(2004, 9, 24, 16, 30, 0, 0)
-
-    val ends = Array(
-      new Gig(null, null, null, null, null, null, null, null, null, oct24_2012, 0,List())
-      ,new Gig(null, null, null, null, null, null, null, null, null, aug16_2010, 0,List())
-      ,new Gig(null, null, null, null, null, null, null, null, null, mar17_2008, 0,List())
-      ,new Gig(null, null, null, null, null, null, null, null, null, nov5_2007, 0,List())
-      ,new Gig(null, null, null, null, null, null, null, null, null, oct5_2005, 0,List())
-      ,new Gig(null, null, null, null, null, null, null, null, null, sep29_2004, 0,List())
-    )
-
-    val mapper = new ObjectMapper
-    mapper.registerModule(DefaultScalaModule)
-    mapper.configure(SerializationConfig.Feature.USE_ANNOTATIONS, true)
-
-    for( gig <- ends ){
-       println( mapper.writeValueAsString(gig) )
-    }
-
-  }
 }
