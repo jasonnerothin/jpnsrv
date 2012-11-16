@@ -27,6 +27,7 @@ import code.mongo.conversion.{SkillMunger, GigMunger}
  */
 class Boot {
 
+  // DI... (subcut?)
   val dbConnection = DbConnection.INSTANCE
   val gigReader = new GigReader(dbConnection)
   val gigMunger = new GigMunger()
